@@ -286,3 +286,75 @@ public static void aMethod(int value) {
 | Command Line Arguments | This is calling the Java program and specifying data in the call. This is very commonly used but doesn't let us create an interactive application in a loop in Java.                                         |
 | Scanner                | The Scanner class was built to be a common way to read input, either using `System.in` or a file. For beginners, it's much easier to understand than the bare bones `System.in`                              |
 
+
+### The Scanner Class
+
+- The Scanner Class is described as a simple text scanner, which can parse primitive types and strings.
+- To use the Scanner Class, we have to create an instance of Scanner.
+
+### Instantiating Scanner
+
+- For reading input from the console or terminal, we instantiate a scanner object using new, followed by the Scanner class name, and passing in System.in, in the parentheses.
+  ```java
+  Scanner sc = new Scanner(System.in);
+  ```
+- For reading input from a file, we instantiate a scanner object using new, again with the Scanner class name, but pass in a File object, in the parentheses.
+  ```java
+  Scanner sc = new Scanner(new File("nameOfFileOnFileSystem"));
+  ```
+  - File is another class provided by Java, for reading and writing files. 
+
+### User Input Challenge
+
+```java
+ public static void main(String[] args) {
+    int currentYear = 2022;
+    try {
+      getInputFromConsole();
+    } catch (NullPointerException e) {
+      getInputFromScanner();
+    }
+  }
+
+  public static void getInputFromConsole() {
+    String name = System.console().readLine("Hi, What's your Name?");
+    System.out.println("Hi, " + name);
+  }
+
+  public static void getInputFromScanner() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("What's your name? ");
+    String name = scanner.nextLine();
+
+    System.out.println("Hi, " + name);
+
+    System.out.println("What year were you born?");
+
+    boolean validDOB = false;
+    int age = 0;
+
+    int currentYear = 2023;
+
+    do {
+      System.out.println("Enter a year of birth >= " + (currentYear - 125) + " and <= " + (currentYear));
+      try {
+        age = checkData(currentYear, scanner.nextLine());
+        validDOB = age >= 0;
+      } catch (NumberFormatException badUserData) {
+        System.out.println("Characters not allowed!!! Try again!");
+      }
+    } while (!validDOB);
+
+    System.out.println("So you are " + age + " years old");
+  }
+
+  public static int checkData(int currentYear, String dateOfBirth) {
+    int dob = Integer.parseInt(dateOfBirth);
+    int minimumYear = currentYear - 125;
+
+    if ((dob < minimumYear) || (dob > currentYear)) return -1;
+
+    return (currentYear - dob);
+  }
+}
+```
