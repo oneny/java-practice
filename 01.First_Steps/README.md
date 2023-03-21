@@ -440,3 +440,10 @@ System.out.print("" + firstChar + secondChar); // AB <- ""는 유요한 문자�
 | %        | Remainder(Modulus) | Remainder(Modulus) | n/a     | n/a           |
 
 ## Abbreviating Operators
+
+### Why do we want to use multiple statements in curluy braces {}?
+
+- So, why use multiple statements in curly braces?
+  - First, it's a way to group statements together before executing them.
+  - It allows us to put statements on multiple lines which is more natural and readable.
+  - We can execute the group of statements as a whole, which more closely resembles running code in Java.
