@@ -290,3 +290,44 @@ if (unknownObject.getClass().getSimpleName().equals("Comedy")) {
 - If the JVM can identify that the object matches the type, it can extract data from the object, without casting.
 - For this operator, the object can be assigned to a binding variable, which here is called `syfy`.
 - The variable `syfy` (if the instanceof method returns true) is already typed as a `ScienceFiction` variable.
+
+## Organizing Java Classes, Packages and Import Statements
+
+### Organinizing Java Classes
+
+- Up untill this point in the class, we haven't created a lot of classes, so we haven't had to think much about organizing those classes.
+- As the course progresses, we're going to be using more and more of Java's libraries, and our applications are going to ge more complex.
+- This feels like a good time to talk about the package and import statements, in more detail.
+- We've talked briefy about import statements, when we used the Scanner class, and we mentioned packages when we talked about access modifiers.
+
+### Package
+
+- As per the Oracle Java Documentation:
+  - A package is a namespace that organizes a set of related types.
+- In general, a package corresponds to a folder or directory, on the operating system, but this isn't a requirement.
+- When using an IDE, ilke IntelliJ, we don't have to worry about how packages and classes are stored on the file system.
+- The package structure is hierarchical, meaning you group types in a tree fashion.
+- You can use any legal Java identifier for your package names, but common practice has package names as all lower case.
+- The period separates the hierarchical level of the package.
+
+### What is the purpose of packages?
+
+- Package let us re-use common class names across different libraries or applications, and provide a way to identify the correct class, either with an import statement, or a qualifying name.
+- For example, you might have a package for utility classes, that can provide common functionality, for all of your classes to access.
+- Packages let us organize our classes by functionality, or relationships.
+- Packages also let us encapsulate our classes, from classes in other packages.
+- So you migh have a package of tightly coupled classes, that should only be accessed by each other, but not by the outside world, as an example.
+
+### The Fully Qualified Class Name vs the import statemenet
+
+```java
+package dev.lpa.package_one;
+
+public class Main {
+  public static void main(String[] args) {
+    java.util.Scanner scanner = new java.util.Scanner(System.in);
+  }
+}
+```
+
+
