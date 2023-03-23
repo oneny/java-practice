@@ -47,7 +47,7 @@ if (firstCondition) {
 - Java's description of the method is:
   - A method declares executable code that can be invoked, passing a fixed number of values as arguments.
 
-### The Benefits of the EMthod
+### The Benefits of the Method
 
 - A method is a way of reducing code duplication.
 - A method can be executed many times with potentially different results, by passing data to the method in the form of arguments.
