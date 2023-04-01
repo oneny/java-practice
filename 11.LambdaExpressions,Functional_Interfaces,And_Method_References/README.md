@@ -316,3 +316,122 @@ s -> s.equalsIgnoreCase("Hello")
 - Crate methods that can be targets for lambda expressions.
 
 ## What's a Method Reference?
+
+- Java gives us alternative syntax to use for this second kind of lambda, that uses named methods.
+- These are called method references.
+- These provide a more compact, easier-to-read lambda expression, for methods that are already defined on a class.
+- For the last couple of videos for example, I've been ignoring Intelli-J's warnings and hints, whenever I've used `System.out.println` in a lambda expression.
+- That's because it can be replaced with a method reference.
+
+### Why are these statements equal?
+
+| Lambda Expression            | Method Reference      |
+| ---------------------------- | --------------------- |
+| `s -> System.out.println(s)` | `System.out::println` |
+
+- At first glance, it's not really obvious why a method reference has this syntax.
+- A method referenc abstracts the lambda expression even further, eliminating the need to declare formal parameters.
+- We salso don't have to pass arguments to the method in question, in this case `println`.
+- A method reference has double colons, between the qualifying type, or object, and the method name.
+- In this example of Consumer interface, not only is the method inferred, but the parameters are as well.
+
+### What methods can be used in method references?
+
+- Methods which can be used, are based on the context of the lambda expression.
+- This means the method reference, is again depenent on the targeted interface's method.
+- You can reference a `static` method on a class.
+- You can reference an instance method from either an instance external to the expression, or an instance passed as one of the arguments.
+- Or you can reference a constructor, by using `new` as the method.
+- Method references can be used to increase the readability of your code.
+
+### Deferred Method Invocation
+
+- When you create variables that are lambda expressions or method references, it's important to remember that the code isn't invoked at that point.
+- The statement of code block gets invoked at the point in the code that the targeted functional method is called.
+
+## The Most Confusing of the Method References
+
+### Some Terminology for the next couple of Slides
+
+- A Type Reference refers to a class name, an interface name, an enum name, or a record name.
+- Remember that static methods are usually called using `Type References`, but can also be called by instances in our code.
+- This is `NO` true however for method references.
+- Static methods, in method references and lambda expressions, must be invoked using a reference type only.
+- There are two ways to call an instance method.
+- The first is when you refer to the method with an instance derived from the enclosing code.
+- This instance is declared outside of the method refernce.
+  - The `System.out::println` method reference is an example.
+- You;ll find that some web sites call this instance a bounded receiver, and I actually like that terminology as a differentiator.
+- A `Bounded Receiver` is an instance derived from the enclosing code, used in the lambda expression, on which the method will be invoked.
+- The second way is where the confusion starts.
+  - The instance used to invoke the method, will be the first argument passed to the lambda expression or method reference when executed.
+- This is known in some places as the `Unbounded Receiver`.
+- It gets dynamically bound to the first argument, which is passed to the lambda expression, when the method is executed.
+- Unfortunately this looks an awful lot like a static method reference, using a reference type.
+- This means there are two method references that resemble each other, but have `two very different meanings`.
+  - The first actually does call a static method, and uses a reference type to do it.
+  - We saw this earlier, when we used the sum method on the Integer wrapper class.
+    ```java
+    Integer::sum
+    ```
+  - This is a `Type Reference(Integer is the type)`, which will invoke a static method.
+  - But there is another, which you'll see when we start working with String method refences inparticular.
+  - Here I show a method reference for the `concat` method on String.
+    ```java
+    String::concat
+    ```
+  - Now, we know by now I hope, that the concat method, isn't a static method on String.
+  - Why is this method reference even valid?
+  - We could never call concat from the String class directly, because it needs to be called on a specific instance.
+  - This is valid when we use a method reference in the context of an `unbounded receiver`.
+- **Remember, the unbounded receiver means, the first argument becomes the instance used, on which the method gets invoked.**
+  ```java
+  String::concat
+  ```
+- Any method reference that uses `String::concat`, must be in the context of a two parameter functional method.
+- The first parameter is the String instance on which the concat method gets invoked, and the second argument is the String argument passed to the concat method.
+
+### Four Types of Method References
+
+| Type                                                                     | Syntax                                                | Method Reference Example | Corresponding Lambda Expression |
+| ------------------------------------------------------------------------ | ----------------------------------------------------- | ------------------------ | ------------------------------- |
+| static method                                                            | `ClassName::staticMethodName(p1, p2, ... pn)`         | `Integer::sum`           | `(p1, p2) -> p1 + p2`           |
+| instance method of a particular (Bounded) object                         | `ContainingObject::instanceMethodName(p1, p2, ..pn)`  | `System.out::println`    | `p1 -> Sytem.out.println(p1)`   |
+| instance method of an arbitrary (Unbounded) object (as determined by p1) | `ContainingType[=p1]::instanceMethodName(p2, ... pn)` | `String::concat`         | `(p1, p2) -> p1.concat(p2)`     |
+| constructor                                                              | `ClassName::new`                                      | `LPAStudent::new`        | `() -> new LPAStudent()`        |
+
+## Convenience Methods on Functional Interfaces (Chaining lambdas)
+
+### Convenience Methods
+
+- The Consumer, Predicate, and Function interfcae all come with these methods, as does the Comparator, which I'll also include here.
+- ChainingLambdas 확인
+
+### Convenience Methods on functional interfaces in `java.util.function` package
+
+| Category fo Interface | Convenience method example     | Notes                                                        |
+| --------------------- | ------------------------------ | ------------------------------------------------------------ |
+| Function              | `function1.andThen(function2)` | Not implemented on IntFunction, DoubleFunction, LongFunction |
+| Function              | `function2.compose(function1)` | Only implemented on Function & UnaryOperator                 |
+| Consumer              | `consumer1.andThen(consumer2)` |                                                              |
+| Predicate             | `predicate1.and(predicate2)`   |                                                              |
+| Predicate             | `predicate1.or(predicate2)`    |                                                              |
+| Predicate             | `predicate1.negate()`          |                                                              |
+
+- For `andThen`, and `compose`, on the function category of interfaces, any Interim Functions are not required to have the same type arguments.
+- Instead, one function's output becomes the next function's input, and the next function's output is not constrained to any specific type, except the last function executed.
+- The Consumer's `andThen` method is different, because it never returns a result, so you use this when you're chaning methods, independent of one another.
+- The Predicate methods always return a boolean, which will combine the output of the two expressions, to obtain a final boolean result.
+
+### Comparator's additional helper methods
+
+|Type of Method|Method Signature|
+|---|---|
+|static|Comparator comparing(Function keyExtractor)|
+|static|Comparator naturalOrder()|
+|static|Comparator reverseOrder()|
+|default|Comparator thenComparing(Comparator other)|
+|default|Comparator thenComparing(Function keyExtractor)|
+|default|Comparator reversed()|
+
+- There is a comparing static method, and an overloaded default method named, thenComparing, and finally a default reversed method.
